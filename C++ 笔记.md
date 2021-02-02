@@ -254,6 +254,7 @@ int main()
 [Done] exited with code=0 in 0.546 seconds
 
 ```
+<font color=red>代码2好像是错的，不知道哪里错了</font>   
 代码2：
 ```
 # include <iostream>
@@ -293,6 +294,12 @@ int main()
 	return 0;
 }
 
+错误运行结果：
+1168231104
+1168231104
+1168231104
+Press any key to continue
+
 运行结果：
 6
 120
@@ -300,4 +307,152 @@ int main()
 Press any key to continue
 ```
 代码2刚开始在VC++6.0和 VS Code上运行都会出现错误的结果，后来不知道怎么结果又对了。
-# 看到了281页
+
+**6.对象指针**   
+**(1)指向对象的指针**
+```
+类名 * 对象指针名
+如： Time * p    
+	 Time t1;
+	p = &t1;	//p中存放着t1的起始地址
+	(*p).hour或p->hour 可以引用t1.hour  
+```
+**（2）指向对象数据成员的指针**
+定义指向对象数据成员的指针变量的方法和定义指向普通变量的指针变量的方法相同：   
+```
+int *p;
+p = &t1.hour //把对象成员的地址赋给p，则p指向对象数据成员t1.hour
+```
+**(3)指向对象成员函数的指针**
+定义指向对象成员函数的指针变量的方法和定义指向普通函数的指针变量的方法不同
+```
+int (*p)(int a, int b);   //指针p是一个普通函数指针
+p=fun;      //让p指向函数fun 
+```
+而定义指向成员函数的指针变量不能简单地将类的成员函数的入口地址赋给p
+```
+p = t1.gettime;      //错误
+```
+定义指向公用成员函数的指针变量的一般形式为：
+ ```
+ 数据类型名 （类名::指针变量名）（参数列表）
+ void(Time::p)();  //定义一个指向公用成员函数的指针
+ 
+ 指针变量名=&类名::成员函数名
+ p=&Time::gettime; //把公用成员函数的入口地址赋给指向公用成员函数的指针
+                   //在VC++中，也可以不写&，但建议不要省略
+ ```   
+ # 上代码🙃
+ ```
+ # include <iostream>
+using namespace std;
+class Time
+{public:
+	int hour,min,sec;
+	Time(int, int, int);
+	void Time::gettime();
+};
+Time::Time(int h, int m, int s)
+{
+	hour=h;
+	min=m;
+	sec=s;
+}
+
+void Time::gettime()
+{
+	cout<<hour<<":"<<min<<":"<<sec<<endl;
+}
+
+int main()
+{
+	Time t1(12,35,46);
+	Time *p;
+	p=&t1;
+	t1.gettime();
+	cout<<(*p).hour<<endl;
+	cout<<p->hour<<endl;
+	void (Time:: *p1)();   //这里后面要加括号
+	p1=&Time::gettime;    //这里后面不要加括号，和指向普通函数的指针在赋值时类似
+	(t1.*p1)();   //这里要加括号，因为前面一部分只是相当于t1.gettime;
+	return 0;
+}
+
+运行结果：
+12:35:46
+12
+12
+12:35:46
+Press any key to continue
+ ```
+**<font collor=red>注意上面代码的注释中写的什么时候要有括号，什么时候没括号</font>**
+
+在给p1赋值时，是
+```
+p1=&Time::gettime;
+```
+而不是
+```
+p1=&t1::gettime;  //错误  
+```
+因为如果同时定义了同一个类的多个对象，这些对象公用这个类的成员函数，即成员函数不是存放在对象的空间中的，而是存放在对象外的空间的，附给这个指针的地址应是公用的成员函数代码段的入口地址。
+
+**7.this指针**
+在每个成员函数中都包含一个特殊的指针，这个指针的名字是固定的，称为this。它是指向本类对象的指针，它的值是调用本成员函数的对象的起始地址。
+学习了this指针之后，应当理解：调用对象t1的成员函数gettime,实际上是在调用成员函数gettime时让this指针指向对象t1.
+因为，在声明类时
+```
+class Time
+{
+	void gettime();
+};
+void Time::gettime()
+{
+	...
+}
+```
+C++编译系统在编译时自动会将其处理为
+```
+void Time::gettime(Time *this)
+{
+	...
+}
+```
+同时，在调用时，也是将`t1.gettime()`处理为`t1.gettime(&t1)`
+;
+
+**共用数据的保护**
+
+
+**类的引用**
+
+```
+#include<iostream>
+using namespace std;
+class Time 
+{
+	public:
+		int hour;
+		Time(int h):hour(h){}
+};
+int main()
+{
+	Time t1(3);
+	Time &t2=t1;
+	return 0;
+}
+```
+```
+#include<iostream>
+using namespace std;
+
+int main()
+{
+	int b=1;
+	int &a=b;
+	cout<<a<<endl;
+	return 0;
+}
+```
+**变量的引用**
+# 看到了294页
