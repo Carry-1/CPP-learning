@@ -421,38 +421,54 @@ void Time::gettime(Time *this)
 同时，在调用时，也是将`t1.gettime()`处理为`t1.gettime(&t1)`
 ;
 
-**共用数据的保护**
 
+**用new运算符新建无名对象**
+```
+Box *p=new Box; 
+```
+返回一个指向该对象的指针
 
-**类的引用**
+**对象的赋值** 
+```
+Box b1(10,8,9), b2;
+ b2=b1;   //对象赋值
 
 ```
-#include<iostream>
-using namespace std;
-class Time 
+**对象的复制**
+```
+Box b1(10,8,9);
+Box b2=b1; //正确
+```
+**复制构造函数**
+```
+Box::Box(const Box &b)
 {
-	public:
-		int hour;
-		Time(int h):hour(h){}
-};
-int main()
-{
-	Time t1(3);
-	Time &t2=t1;
-	return 0;
+	height=B.height;
+	width=b.wdth;
+	length=b.length;
+
 }
 ```
+以下三种情况需调用复制构造函数：
+**（1）**程序中需建立一个新对象，并用同类对象对它初始化
+**（2）**当函数参数是类的对象时，调用该参数时实参是类的对象，需要将该对象的拷贝传给形参，就是按实参复制一个形参，此时调用复制构造函数。
+**（3）**函数的返回值是类的对象。
 ```
-#include<iostream>
-using namespace std;
-
-int main()
+Box fun(void)
 {
-	int b=1;
-	int &a=b;
-	cout<<a<<endl;
-	return 0;
+	Box b1;
+	...
+	return b1;
+}
+int main ()
+{
+	...
+	Box b2;
+	b2 = fun();
 }
 ```
-**变量的引用**
+由于退出fun函数时，对象b1占用的空间被释放，因此return返回的肯定不是b1的数据成员的值，而是调用复制构造参数，将b1复制给一个临时对象，并将其传给b2.
+
+**静态数据成员**
+静态数据成员在内存中只占一份空间，而不是每个对象都为它分配空间，每个对象都可以引用这个数据成员。静态数据成员所占的空间不属于对象，同成员函数类似。它所占的内存在~~声明一个类的时候~~程序开始运行时就已被分配，并可被使用（同静态变量类似）。静态数据成员可以被初始化，但只能在体外被初始化
 # 看到了294页
