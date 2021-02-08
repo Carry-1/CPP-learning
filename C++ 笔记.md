@@ -478,4 +478,236 @@ int main ()
 **类的提前声明**
 **友元类**     
 友元类的声明是**单向**的，不是**双向**的。如果类A是类B的友元类，则类A可以访问类B中所有的数据成员，同时，友元类的声明损害了信息隐蔽，因此，应该尽量少声明一些友元类。
-# 看到了335页
+
+**转换构造函数**
+代码：
+```
+# include <iostream>
+using namespace std;
+class Complex
+{
+public:
+	Complex()
+	{
+		real=0;
+		image=0;
+	}
+	Complex( int r)
+	{
+		real = r;
+		image = 0;
+	}
+	int real, image;
+};
+int main()
+{
+	Complex c1(3);
+	cout<<c1.real<<"+"<<c1.image<<"i"<<endl;
+	return 0;
+}
+
+运行结果：
+3+0i
+Press any key to continue
+
+```
+
+**类型转换函数**
+operator 类型名()
+{
+	实现转换的语句;
+}
+
+如：
+```
+operator double()
+{
+	return real;    //可见，类型转换函数应为成员函数。否则，编译系统怎么会知道real是某个对象的数据成员呢
+}
+```
+```
+# include <iostream>
+using namespace std;
+class Complex
+{
+public:
+	Complex()
+	{
+		real=0;
+		image=0;
+	}
+	Complex(int r, int i):real(r),image(i){}
+	operator double()   //定义类型转换函数
+	{
+		return real;
+	}
+	int real, image;
+};
+int main()
+{
+	Complex c1(3,2);
+	double a=3.2;
+	double b= a + c1;
+	cout<<b<<endl;
+	return 0;
+}
+```
+
+看一段同时有**类型转换函数、转换构造函数、运算符重载函数（重载为成员函数）的代码**
+```
+# include <iostream>
+using namespace std;
+class Complex
+{
+public:
+	Complex()
+	{
+		real=0;
+		image=0;
+	}
+	Complex(int r, int i):real(r),image(i){}
+	operator double()    //定义类型转换函数
+	{
+		return real;
+	}
+	Complex(double r) //定义转换构造函数
+	{ 
+		real = r;
+      //  image =0;
+	}
+	Complex operator +(Complex &c2);    //声明运算符重载函数
+
+		
+	double real, image;
+};
+
+Complex Complex::operator +(Complex &c2)   //定义运算符重载函数
+	{
+		Complex c;
+		c.real= real + c2.real;
+		c.image = image + c2.image;
+		return c;
+	}
+		
+int main()
+{
+	Complex c1(3,2), c2(5,4),c3, c4;
+	double a=3.2;
+	double b= a + c1;   //c1被强制类型转换为double类型
+	c3 = c1+c2;   //c1和c2通过重载后的"+"进行相加
+	c4 = c1 + a;  
+	cout<<"b="<<b<<endl;
+	cout<<"c3="<<c3.real<<"+"<<c3.image<<"i"<<endl;
+	cout<<"c4="<<c4<<endl;
+	return 0;
+}
+```
+
+派生类的声明方式：
+例如已声明：
+```
+class student
+{
+	public:
+	cout<<"number="<<number<<endl;
+	cout<<"name="<<name<<endl;
+	cout<<"sex="<<sex<<endl;
+
+	private:
+	int number;
+	char sex;
+	string name;
+
+};
+
+class Student1:public student    //声明派生类
+{
+	public:
+	cout<<"age="<<age<<endl;
+	cout<<"address="<<add<<endl;
+	
+	private:
+	int age;
+	char add[20];
+	
+
+};
+
+在声明派生类时，一般格式为：
+class 派生类名：继承方式 基类名
+{
+	派生类的新增成员；
+}；
+```
+继承方式可选 public private protected,默认为private
+
+继承方式与在派生类中的访问属性对应关系：  
+~~首先要清楚，若某个成员是属于某个类的私有成员，则该成员只可被该类的成员函数访问，若~~
+|     在基类的访问属性     | 继承方式 |             在派生类的访问属性                |
+| ------------ | --- | ------------------------------- |
+| public（公用） |  public（公用） | [public（公用） |
+| private（私有）     |  public(公用) | 不可访问          |
+| protected     |  public(公用) | protected(保护)          |
+
+|     在基类的访问属性     | 继承方式 |             在派生类的访问属性                |
+| ------------ | --- | ------------------------------- |
+| public（公用） |  private(私有) | [private(私有) |
+| private（私有）     |  private(私有) | 不可访问          |
+| protected     |   private(私有) |  private(私有)          |
+
+代码：
+```
+# include<iostream>
+# include<string>
+using namespace std;
+class student    //定义基类
+{
+public:
+	void get_value()
+	{
+		cin>>number>>name>>sex;
+	}
+	void display()
+	{
+		cout<<"number:"<<number<<endl;
+		cout<<"name:"<<name<<endl;
+		cout<<"sex:"<<sex<<endl;
+
+	}
+private:
+	int number;    //学号
+	char sex;      //性别
+	string name;
+};
+
+class student1: public student    //定义派生类
+{
+public:
+	void get_value1()
+	{
+		cin>>age>>addr;
+	}
+
+	void display1()
+	{
+		cout<<"age:"<<age<<endl;
+		cout<<"addr:"<<addr<<endl;
+	}
+private:
+	int age;
+	string addr;
+};
+
+int main()
+{
+	student1 std1, std2;   //定义派生类对象
+	std1.get_value1();    //派生类对象访问派生类成员函数
+	std1.display1();     //派生类对象访问派生类成员函数
+	std2.get_value();   //派生类对象访问基类成员函数
+	std2.display();     //派生类对象访问基类成员函数
+	return 0;
+}
+```
+
+
+# 看到了355页
