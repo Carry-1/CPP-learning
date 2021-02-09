@@ -655,6 +655,12 @@ class 派生类名：继承方式 基类名
 | private（私有）     |  private(私有) | 不可访问          |
 | protected     |   private(私有) |  private(私有)          |
 
+|     在基类的访问属性     | 继承方式 |             在派生类的访问属性                |
+| ------------ | --- | ------------------------------- |
+| public（公用） |  protected(保护) | [protected(保护) |
+| private（私有）     |  protected(保护) | 不可访问          |
+| protected     |   protected(保护) |  protected(保护)          |
+
 代码：
 ```
 # include<iostream>
@@ -708,6 +714,89 @@ int main()
 	return 0;
 }
 ```
+**派生类构造函数**
+```
+class student
+{
+	public:
+		int num;
+		string name;
+		int age;
+};
 
+class student1: public student
+{
+	public:
+		char sex;
+		string addr;
+		student1(int n, string nam, int a, char s string add):student(n, nam, a)
+		{
+			sex = s;
+			addr = add;
+		}
+};
 
-# 看到了355页
+```
+**有子对象的构造函数**
+```
+# include<iostream>
+# include<string>
+using namespace std;
+ 
+class student     //基类
+{
+	public:
+		student(int n, string nam)
+		{
+			number = n;
+			name = nam;
+		}
+		void display()
+		{
+			cout<<"number="<<number<<endl;
+			cout<<"name="<<name<<endl;
+		}
+	protected:
+		int number;    //学号
+		string name;   //姓名
+};
+
+class student1: public student     //派生类
+{
+	public:
+		student1(int n, string nam, int n1, string nam1, int a, string add): student(n, nam), monitor(n1, nam1) //定义有子对象的派生类构造函数
+		{
+			age = a;
+			addr = add;
+		}
+		void show()     //派生类的成员函数
+		{
+			cout<<"information of student is"<<endl;
+
+			display();     //调用基类成员函数，输出学号和姓名
+			cout<<"age="<<age<<endl;
+			cout<<"addr="<<addr<<endl;
+		}
+		
+		void show_display()     //派生类的成员函数，用于输出班长的学号和姓名
+		{
+			cout<<"information of monitor is"<<endl;
+			monitor.display();   //输出班长的信息
+		}
+	private:     //派生类的私有成员
+		student monitor;       //基类对象作为派生类的成员
+		int age;
+		string addr;
+};
+	int main()
+{
+		student1 stud1(520, "XQS", 1314, "ZMZ", 23, "AHSHFS");
+		stud1.show();    //输出学生的信息
+		stud1.show_display();    //输出班长的信息
+
+		return 0;
+}
+```
+
+**多重继承**
+# 看到了384页
