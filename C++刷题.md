@@ -225,3 +225,59 @@ C）friend Decr operator --(Decr&,int);
 D）Decr operator --(Decr&,int);
 ```
 分析：“++”和“--”既可以前置也可以后置，重载时是有区别的，如果在重载函数的参数表列中多加一个形参`int`则表示重载后置自增（自减）运算符函数，否则为前置。
+
+```
+常对象的成员函数不一定都是常成员函数，只需保证其数据成员是常数据成员即可
+```
+```
+this作用域是在类内部，当在类的非静态成员函数中访问类的非静态成员时，编译器会自动将对象本身的地址作为一个隐含参数传递给函数。另外，全局函数和静态函数都不能使用this指针。故本题答案是类的非静态成员函数都有this指针。
+```
+
+# include <iostream>
+using namespace std;
+class A{
+	public:
+		static int a;
+		void init()
+		{
+			a=1;
+		}
+		A(int a = 2)
+		{
+			init();
+			a++;
+		}
+};
+int A::a = 0;
+A obj;
+int main()
+{
+	cout<<obj.a;
+	return 0;
+}
+
+注意构造函数，它没能实现对数据成员a的初始化，相反，在默认构造函数中，形参a会屏蔽掉静态数据成员a，而在函数中对形参a的任何改变都不影响函数作用域外的静态数据成员a          
+```
+A(int a = 2)
+		{
+			init();
+			a++;
+		}
+```
+```
+#include<iostream>
+using std::cout;
+using std::endl;
+class Sample{
+    public:
+    Sample(){}
+    ~Sample(){cout<<"*";}
+};
+
+int main()
+{
+    Sample temp[2], *ptemp[2];
+    return 0;
+}
+```
+上述代码在运行时只输出2个*号，原因是只建立了两个对象`（Sample temp[2]）`。`Sample *ptemp[2]`用于建立两个对象指针，<font color=red>并不是对象</font>，对象指针是指针，它的值是地址，它的建立不需要调用构造函数。

@@ -43,5 +43,8 @@ launch.json (debugger settings)   //与调试有关的设置
 c_cpp_properties.json (compiler path and IntelliSense settings) //这里面有编译器路径和你所用的C/C++标准...
 ```
 
-<font color=red>另外，强烈建议路径名即文件名均使用英文，否则在调试时可能识别不出调试路径，最后返回给你一个'no such file or directory.'</foont>      
+<font color=red>另外，强烈建议路径名即文件名均使用英文，否则在调试时可能识别不出调试路径，最后返回给你一个'no such file or directory.'     
+launch.json文件中 Console：...改为： "externalConsole": true,</font>
+
+
 # 参考文献：[Visual Studio Code 官方文档](https://code.visualstudio.com/docs/cpp/config-mingw)
