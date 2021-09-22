@@ -9,7 +9,7 @@ class Foo
 {
 public:
   // single parameter constructor, can be used as an implicit conversion
-  Foo (int foo) : m_foo (foo) 
+  Foo (int foo) : m_foo (foo) //ctor
   {
   }
 

@@ -28,7 +28,7 @@ code .   //注意不要忽略后面这个点
 
 # 3.调试程序
 &emsp;&emsp;在主菜单中选择`Run > Add Configuration... 之后选择 C++ (GDB/LLDB).` 之后再在出现的下拉菜单中选择选择`g++.exe build and debug active file.`再返回helloworld.cpp，这样它就又是active file了，按F5就可以开始调试啦。调试时可以按`F9,F10,F11`(用处和在VC++6.0里一样🙃)。并且可以在左侧边栏中的`VARIABLE`下面监测变量的变化。也可以在`WATCH`中添加你想要观察的某个变量，点击它旁边的`+`号即可。
-**调试后源程序若没问题，且已经编译生成可执行文件，按`CTRL+Shift+N`运行即可**
+**调试后源程序若没问题，且已经编译生成可执行文件，按`CTRL+Shift+N`运行即可** 
 
 &emsp;&emsp;至此，一个简单的源程序的编写、编译、调试和运行已经完成。
 
@@ -45,6 +45,11 @@ c_cpp_properties.json (compiler path and IntelliSense settings) //这里面有�
 
 <font color=red>另外，强烈建议路径名即文件名均使用英文，否则在调试时可能识别不出调试路径，最后返回给你一个'no such file or directory.'     
 launch.json文件中 Console：...改为： "externalConsole": true,</font>
+
+# 4.运行程序
+
+You can run ***helloworld*** in the terminal by typing helloworld.exe (or .\helloworld.exe if you use a PowerShell terminal).
+
 
 
 # 参考文献：[Visual Studio Code 官方文档](https://code.visualstudio.com/docs/cpp/config-mingw)
